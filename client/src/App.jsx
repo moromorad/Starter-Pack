@@ -67,6 +67,22 @@ function App() {
   }
 
   async function generatePlaylist() {
+    try {
+      const res = await fetch("/api/makeplaylistcurrentweather");
+      const data = await res.json();
+      console.log("Playlist generated:", data);
+
+      alert("Playlist Created! Title: " + data.title);
+
+      setPlaylistGenerated(true); // Show playlist bubble
+    } catch (err) {
+      console.error("Playlist error:", err);
+      alert("Error generating playlist.");
+    }
+  }
+  
+
+  async function generatePlaylist() {
     const res = await fetch("/api/make_playlist", { method: "POST" });
     const data = await res.json();
   
@@ -139,12 +155,12 @@ function App() {
             onChange={(e) => setSpotifyLink(e.target.value)}
           />
   
-          <button
-            className="spotify-generate-btn"
-            onClick={() => setPlaylistGenerated(true)}
-          >
-            Generate
-          </button>
+  <button
+  className="spotify-generate-btn"
+  onClick={generatePlaylist}
+>
+  Generate
+</button>
         </div>
       )}
   
