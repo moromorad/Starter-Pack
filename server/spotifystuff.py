@@ -11,7 +11,7 @@ client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
 
 
 
-auth_manager = SpotifyOAuth(client_id=client_id, client_secret=client_secret, redirect_uri='http://127.0.0.1:8000/callback', scope="user-top-read playlist-read-private")
+auth_manager = SpotifyOAuth(client_id=client_id, client_secret=client_secret, redirect_uri='http://127.0.0.1:8000/callback', scope="user-top-read playlist-read-private user-read-private")
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 playlist_id = '7zsSWNoB46Ct4RHXv3M5vh'  # example Spotify playlist URI or ID
@@ -36,6 +36,17 @@ print(f"Total tracks fetched: {len(all_tracks)}")
 for item in all_tracks:
     track = item['track']
     print(f"{track['name']} by {', '.join(artist['name'] for artist in track['artists'])}")
+
+# Assuming all_tracks is your full list of 700 track items
+
+first_50_tracks = all_tracks[-50:]  # get first 50 items
+
+# Extract track IDs from first 50 tracks
+track_ids = [item['track']['id'] for item in first_50_tracks if item['track'] and item['track']['id']]
+
+print(track_ids)
+
+
 
 
 """

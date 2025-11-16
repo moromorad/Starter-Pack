@@ -182,11 +182,10 @@ print(f"one hr of sunset: {is_within_one_hour_of_sunset(daily_dataframe)}")
 print(f"one hr of sunrise: {is_within_one_hour_of_sunrise(daily_dataframe)}")
 
 # Define 8:00:00 AM as a time object
-morning_cutoff = time(10, 30, 0)  # 10:30:00 AM
-noon_cutoff = time(13, 30, 0)  # 10:00:00 AM
-afternoon_cutoff = time(16, 30, 0)  # 10:00:00 AM
-evening_cutoff = time(19, 30, 0)  # 10:00:00 AM
-night_cutoff = time(22, 30, 0)  # 10:00:00 AM
+morning_start = time(6, 0, 0)  # 10:30:00 AM
+morning_cutoff = time(12, 0, 0)  # 10:30:00 AM
+afternoon_cutoff = time(16, 0, 0)  # 10:00:00 AM
+evening_cutoff = time(20, 0, 0)  # 10:00:00 AM
 
 def get_current_time_of_day():
     now = datetime.now(pytz.timezone('America/Vancouver')).time()
@@ -195,18 +194,14 @@ def get_current_time_of_day():
         return "Sunrise"
     elif is_within_one_hour_of_sunset(daily_dataframe):
         return "Sunset"
-    elif now < morning_cutoff:
+    elif now >= morning_start and now < morning_cutoff:
         return "Morning"
-    elif now < noon_cutoff:
-        return "Noon"
     elif now < afternoon_cutoff:
         return "Afternoon"
     elif now < evening_cutoff:
         return "Evening"
-    elif now < night_cutoff:
-        return "Night"
     else:
-        return "Midnight"
+        return "Night"
     
 print(get_current_time_of_day())
 
