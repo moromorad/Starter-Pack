@@ -42,6 +42,8 @@ for chunk in chunk_list(track_ids, 40):
 
 
 def in_range_float(min, max, val):
+    if val is None:
+        return False
     return min <= val and val <= max
 
 def filter_tracks_by_audio_ft(vals):

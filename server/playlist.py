@@ -8,6 +8,8 @@ from reccobeats_util import filter_tracks_by_audio_ft
 from openaiService import getSongParams, maketitle
 from weather import get_weather_state
 
+import random
+
 load_dotenv()  # Load variables from .env into environment
 
 client_id = os.getenv('SPOTIFY_CLIENT_ID')
@@ -26,15 +28,19 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
 
-def make_new_playlist():
-    weather_state = get_weather_state()
+def make_new_playlist(weather_state):
     song_params = getSongParams(weather_state)
 
     new_playlist = sp.user_playlist_create("31butcal7mudp7rvfdcrowim7bci", maketitle(song_params, weather_state), public=False)
     new_playlist_id = new_playlist["id"]
-    filtered_track_ids = filter_tracks_by_audio_ft(song_params)
+    random.shuffle(filter_tracks_by_audio_ft(song_params))
+    filtered_track_ids = filter_tracks_by_audio_ft(song_params)[:50]
     track_URIs = [f"spotify:track:{tid["ori_id"]}" for tid in filtered_track_ids]
     print(track_URIs)
     sp.playlist_add_items(new_playlist_id, track_URIs)
 
-make_new_playlist()
+
+
+make_new_playlist(get_weather_state())
+#make_new_playlist({'current_weather': 'Clear sky', 'current_time': 'Morning'})
+
