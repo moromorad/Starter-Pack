@@ -175,3 +175,10 @@ body, html, #root {
   text-align: left;
 }
 
+.playlist-ready-subtitle {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #ffffffcc;
+    margin-bottom: 10px;
+    text-align: left;
+  }
