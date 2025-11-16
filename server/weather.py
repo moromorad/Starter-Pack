@@ -194,7 +194,9 @@ def get_current_time_of_day():
         return "Sunrise"
     elif is_within_one_hour_of_sunset(daily_dataframe):
         return "Sunset"
-    elif now >= morning_start and now < morning_cutoff:
+    elif now < morning_start:
+        return "Night"
+    elif now < morning_cutoff:
         return "Morning"
     elif now < afternoon_cutoff:
         return "Afternoon"
