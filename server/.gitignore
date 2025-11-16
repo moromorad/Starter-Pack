@@ -22,6 +22,8 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.cache.sqlite
+.cache
 
 # IDE
 .vscode/
