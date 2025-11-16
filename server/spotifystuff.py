@@ -1,32 +1,61 @@
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyOAuth
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load variables from .env into environment
+
+client_id = os.getenv('SPOTIFY_CLIENT_ID')
+client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
 
 
-client_id = '27464a703f5246d2a7357956cdea9d6e'
-client_secret = 'e1813ceb7b004932812144a48182181c'
 
-auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+auth_manager = SpotifyOAuth(client_id=client_id, client_secret=client_secret, redirect_uri='http://127.0.0.1:8000/callback', scope="user-top-read playlist-read-private")
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 playlist_id = '7zsSWNoB46Ct4RHXv3M5vh'  # example Spotify playlist URI or ID
 
+all_tracks = []
+limit = 100  # max allowed by Spotify API
+offset = 0
+
+while True:
+    response = sp.playlist_items(playlist_id, limit=limit, offset=offset)
+    tracks = response['items']
+    all_tracks.extend(tracks)
+    
+    if len(tracks) < limit:
+        # Fetched all tracks
+        break
+    offset += limit
+
+print(f"Total tracks fetched: {len(all_tracks)}")
+
+# Example: print track names and artists
+for item in all_tracks:
+    track = item['track']
+    print(f"{track['name']} by {', '.join(artist['name'] for artist in track['artists'])}")
+
+
+"""
 # Get playlist info (metadata)
 # playlist = sp
 
-playlist = sp.playlist(playlist_id)
+playlist = sp.current_user_top_tracks(limit=20, time_range='medium_term')
 print("Playlist Name:", playlist['name'])
 print("Description:", playlist['description'])
 print("Number of tracks:", playlist['tracks']['total'])
 
 # Get tracks (Note: tracks are paginated, here is how to get first 100)
-results = sp.playlist_tracks(playlist_id)
+results = sp.current_user_top_tracks(limit=50, time_range='medium_term')
 tracks = results['items']
 
 query = "chill"  # mood keyword
-results1 = sp.search(q=query, type='track', limit=20)
+results1 = sp.search(q=query, type='track', limit=50)
 
 
-""" print("\nTracks in the playlist:")
+ print("\nTracks in the playlist:")
 for i, item in enumerate(tracks, start=1):
     track = item['track']
     print(f"{i}. {track['name']} - {track['artists'][0]['name']}")
@@ -35,11 +64,15 @@ print("\nTracks in the playlist:")
 for i, item in enumerate(tracks, start=1):
     track = item['track']
     print(f"{i}. {track['name']} - {track['artists'][0]['name']}")   
- """
 
 
-for idx, item in enumerate(results1['tracks']['items']):
+for idx, item in enumerate(results['items']):
+    track_name = item['name']
+    artists = ", ".join(artist['name'] for artist in item['artists'])
+    print(f"{idx + 1}. {track_name} by {artists}")
+
+for idx, item in enumerate(results['tracks']['items']):
     track = item
-    print(f"{idx + 1}. {track['name']} by {track['artists'][0]['name']}")     
+    print(f"{idx + 1}. {track['name']} by {track['artists'][0]['name']}")   
 
-    
+"""
