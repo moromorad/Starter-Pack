@@ -60,8 +60,8 @@ openmeteo = openmeteo_requests.Client(session = retry_session)
 # The order of variables in hourly or daily is important to assign them correctly below
 url = "https://api.open-meteo.com/v1/forecast"
 params = {
-	"latitude": 49.26,
-	"longitude": -123.25,
+	"latitude": 49.2593,
+	"longitude": 123.2475,
 	"daily": ["sunset", "sunrise"],
 	"hourly": "weather_code",
 	"timezone": "auto",
